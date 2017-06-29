@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>select操作大全</title>
+    
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script type="text/javascript">
+    /**
+     * 判断select选项中，是否存在Value="paraValue"的Item 
+     * 1判断select选项中 是否存在Value="paraValue"的Item 
+ 2向select选项中 加入一个Item 
+ 3从select选项中 删除一个Item 
+ 4删除select中选中的项 
+ 5修改select选项中 value="paraValue"的text为"paraText" 
+ 6设置select中text="paraText"的第一个Item为选中 
+ 7设置select中value="paraValue"的Item为选中 
+ 8得到select的当前选中项的value 
+ 9得到select的当前选中项的text 
+10得到select的当前选中项的Index 
+11清空select的项 
+     */
+    function isExitSelectItem(objSelect, objItemValue){
+       var isExit = false;        
+       for (var i = 0; i < objSelect.options.length; i++) {        
+          if (objSelect.options[i].value == objItemValue) {        
+             isExit = true;        
+             break;        
+           }        
+       }        
+       return isExit;        
+    }
+    
+    /**
+     * 向select选项中加入一个Item        
+     *
+     */
+    function addItemToSelect(objSelect, objItemValue, objItemText) {  
+       //判断是否存在  
+       if(isExitSelectItem(objSelect, objItemValue)){
+          alert("该Item的Value值已经存在");        
+       }else{
+          var varItem = new Option(objItemText, objItemValue);      
+          objSelect.options.add(varItem);     
+          alert("成功加入");     
+       }
+    }
+    
+    /**
+     * 从select选项中删除一个Item        
+     *
+     */
+    function removeItemFromSelect(objSelect, objItemValue) { 
+       if(isExitSelectItem(objSelect, objItemValue)){
+          for (var i = 0; i < objSelect.options.length; i++) {        
+             if (objSelect.options[i].value == objItemValue) {        
+                objSelect.options.remove(i);        
+                break;        
+             }        
+          }        
+          alert("成功删除");  
+       }else{
+          alert("该select中不存在该项");        
+       }
+    }
+    
+    /**
+     * 删除select中选中的项        
+     *
+     */
+    function removeSelectedItemFromSelect(objSelect) {
+       for(var i=0; i<objSelect.options.length; i++){
+          if(objSelect[i].selected==true){
+             objSelect.options[i] = null;    
+          }
+       }
+    }
+    
+    /**
+     * 修改select选项中value="paraValue"的text为"paraText"             
+     *
+     */
+    function updateItemToSelect(objSelect, objItemValue, objItemText) {      
+       if(isExitSelectItem(objSelect, objItemValue)){
+          for (var i = 0; i < objSelect.options.length; i++) {        
+             if (objSelect.options[i].value == objItemValue) {        
+                objSelect.options[i].text = objItemText;        
+                break;        
+             }   
+          }
+          alert("成功修改");        
+       }else{
+          alert("该select中 不存在该项");        
+       }
+    }       
+    
+    /**
+     * 设置select中text="paraText"的第一个Item为选中               
+     *
+     */
+    function selectedItemByText(objSelect, objItemText) {            
+       //判断是否存在        
+       var isExit = false;
+       for (var i = 0; i < objSelect.options.length; i++) {     
+          if(objSelect.options[i].text==objItemText){
+             objSelect.options[i].selected=true;
+             isExit=true;
+             break;
+          }
+       }   
+       
+       //Show出结果        
+       if (isExit) {        
+          alert("成功选中");        
+       } else {        
+          alert("该select中 不存在该项");        
+       }     
+    }    
+       
+    // 设置select中value="paraValue"的Item为选中： 
+    if(objSelect.option[i].value == objItemValue){
+       objSelect.options[i].selected=true;   
+    }    
+       
+    // 得到select的当前选中项的value    
+    var currSelectValue = objSelect.value;    
+       
+    // 得到select的当前选中项的text    
+    var currSelectText = objSelect.options[objSelect.selectedIndex].text;    
+       
+    // 得到select的当前选中项的Index    
+    var currSelectIndex = objSelect.selectedIndex;    
+       
+    // 11.清空select的项    
+    objSelect.options.length = 0;   
+    
+    /*
+     * 测试
+     *
+     */
+    function test(){
+       selectedItemByText(document.getElementById("stuid"), "林计钦30");
+    }
+    </script>
+  </head>
+  
+  <body>
+     <select id="stuid">
+        <option value="0">林计钦0</option>
+        <option value="1">林计钦1</option>
+        <option value="2">林计钦2</option>
+        <option value="3">林计钦3</option>
+     </select>
+     <br/><br/>
+     <input type="button" value="测试" onclick="test();">
+  </body>
+</html>
