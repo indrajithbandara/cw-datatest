@@ -1,0 +1,124 @@
+<meta charset="utf-8"/>
+
+
+<script src="{{ url_for('static', filename='js/vue.min.js') }}"></script>
+<!-- 
+<script src="{{ url_for('static', filename='js/fetch.js') }}"></script>
+-->
+
+
+
+<div id="app">
+    <form v-on:submit="ajax">
+        <div class="form-group">
+            <input type="text" v-model="title" placeholder="任务标题" required="required">
+        </div>
+        <div class="form-group">
+            <input type="texteara" v-model="description" placeholder="任务描述" required="required">
+        </div>
+
+        <input type="submit" class="btn btn-default" value="添加任务">
+    </form>
+
+    <!-- 任务列表 -->
+    <ol>
+        <li v-for="task in tasks">
+            <span v-text="task.title"></span> -- 
+            <span v-text="task.description"></span> -- 
+            <span v-text="task.done"></span>
+        </li>
+    </ol>
+</div>
+
+
+<script>
+var vm = new Vue({
+  el: '#app',
+  data: {
+    title: '',
+    description: '',
+    tasks: [
+      // {
+      //    uri: 'todo/api/v1.0/tasks/1', 
+      //    title: 'waw the land', 
+      //    description: 'do something best', 
+      //    done: false
+      // }
+    ]
+  },
+  
+  // 事件钩子
+  beforeCreate: function () {
+    // `this` 指向 vm 实例
+    var _this = this; //this只能到这一层
+    
+    // 原生 js 实现 ajax
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/todo/api/v1.0/tasks/');
+    xhr.send();
+
+    xhr.addEventListener('loadend', function() {
+        if(xhr.status == 200){
+            var res = JSON.parse(xhr.responseText);
+            console.log(res);
+            res["tasks"].map(function(task){_this.tasks.push(task)});
+        }
+    }, false);
+    
+    
+    // fetch 库实现 ajax
+    //fetch('/todo/api/v1.0/tasks/')
+    //.then(r => r.json())
+    //.then(j => {
+    //    console.log(j);
+    //    this.tasks = j.tasks; //暴力替换
+    //})
+  },
+  
+  methods: {
+    ajax: function(event){
+        event.preventDefault();
+        
+        var _this = this; //this只能到这一层
+        
+        var payload = {
+            title: _this.title, 
+            description: _this.description
+        };
+        console.log(payload);
+        
+        // 原生 js 实现 ajax
+        var xhr2 = new XMLHttpRequest();
+        xhr2.open('POST', '/todo/api/v1.0/tasks/');
+        xhr2.setRequestHeader('Content-Type', 'application/json');
+        xhr2.send(JSON.stringify(payload));// 发送json数据！
+
+        xhr2.addEventListener('loadend', function() {
+            if(xhr2.status == 201){ // 注意，这里是201，与后台一致！！
+                var res2 = JSON.parse(xhr2.responseText);
+                console.log(res2["task"]);
+                //[res2["task"]].map(function(task){_this.tasks.push(task)}); // 这里也用map，没别的目的，只想与前面的形式一致
+                _this.tasks.push(res2["task"]); //动作温柔
+            }
+        }, false);
+        
+        
+        // fetch 库实现 ajax
+        //fetch('/todo/api/v1.0/tasks/', {
+        //    method: 'POST',
+        //    headers: {
+        //        'Content-Type': 'application/json'
+        //    },
+        //    body: JSON.stringify(payload)
+        //})
+        //.then(r => r.json())
+        //.then(j => {
+        //    console.log(j);
+            //[j.task].map(function(task){_this.tasks.push(task)});
+        //    _this.tasks.push(j.task); //动作温柔
+        //})
+    }
+  }
+});
+
+</script>
